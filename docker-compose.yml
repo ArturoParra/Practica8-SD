@@ -1,0 +1,30 @@
+services:
+  eureka-server:
+    build:
+      context: ./eureka-server/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+  
+  sercicio-proveedor:
+    build:
+      context: ./sercicio-proveedor/sercicio-proveedor
+    container_name: sercicio-proveedor
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+
+  sercicio-consumidor:
+    build:
+      context: ./sercicio-consumidor/sercicio-consumidor
+    container_name: sercicio-consumidor
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+      - sercicio-proveedor
